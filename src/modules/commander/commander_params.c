@@ -1097,3 +1097,20 @@ PARAM_DEFINE_FLOAT(COM_POS_LOW_EPH, -1.0f);
  * @group Commander
  */
 PARAM_DEFINE_INT32(COM_ARMABLE, 1);
+
+/**
+ * Minimum battery level for arming
+ *
+ * This check is additional to the other battery thresholds, arming is also prevented
+ * if the battery level is below BAT_LOW_THR, BAT_CRIT_THR or BAT_EMERGEN_THR.
+ *
+ * A value of 0 disables the check.
+ *
+ * @min 0
+ * @max 0.5
+ * @decimal 2
+ * @increment 0.01
+ * @group Commander
+ * @unit norm
+ */
+PARAM_DEFINE_FLOAT(COM_ARM_BAT_MIN, 0.f);
