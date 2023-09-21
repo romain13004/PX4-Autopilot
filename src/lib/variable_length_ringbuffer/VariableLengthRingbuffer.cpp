@@ -35,8 +35,9 @@
 
 
 #include "VariableLengthRingbuffer.hpp"
-#include "assert.h"
-#include "string.h"
+
+#include <assert.h>
+#include <string.h>
 
 
 VariableLengthRingbuffer::~VariableLengthRingbuffer()
@@ -90,7 +91,7 @@ size_t VariableLengthRingbuffer::pop_front(uint8_t *buf, size_t buf_max_len)
 	// Check next header
 	Header header;
 
-	if (!_ringbuffer.pop_front(reinterpret_cast<uint8_t *>(&header), sizeof(header))) {
+	if (_ringbuffer.pop_front(reinterpret_cast<uint8_t *>(&header), sizeof(header)) < sizeof(header)) {
 		return 0;
 	}
 
@@ -101,8 +102,5 @@ size_t VariableLengthRingbuffer::pop_front(uint8_t *buf, size_t buf_max_len)
 	size_t bytes_read = _ringbuffer.pop_front(buf, header.len);
 	assert(bytes_read == header.len);
 
-	// In case asserts are commented out to prevent unused warnings.
-	(void)bytes_read;
-
-	return header.len;
+	return bytes_read;
 }

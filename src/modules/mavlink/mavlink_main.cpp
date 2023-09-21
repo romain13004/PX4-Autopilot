@@ -2470,7 +2470,7 @@ Mavlink::task_main(int argc, char *argv[])
 		/* pass messages from other instances */
 		if (get_forwarding_on()) {
 
-			mavlink_message_t msg{};
+			mavlink_message_t msg;
 			size_t available_bytes;
 			{
 				// We only send one message at a time, not to put too much strain on a

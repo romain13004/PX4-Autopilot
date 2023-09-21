@@ -35,8 +35,10 @@
 
 
 #include "Ringbuffer.hpp"
-#include "assert.h"
-#include "string.h"
+
+#include <mathlib/mathlib.h>
+#include <assert.h>
+#include <string.h>
 
 
 Ringbuffer::~Ringbuffer()
@@ -72,7 +74,7 @@ size_t Ringbuffer::space_available() const
 
 size_t Ringbuffer::space_used() const
 {
-	if (_start < _end) {
+	if (_start <= _end) {
 		return _end - _start;
 
 	} else {
@@ -144,11 +146,7 @@ size_t Ringbuffer::pop_front(uint8_t *buf, size_t buf_max_len)
 	if (_start < _end) {
 
 		// No wrap around.
-		size_t to_copy_len = _end - _start;
-
-		if (to_copy_len > buf_max_len) {
-			to_copy_len = buf_max_len;
-		}
+		size_t to_copy_len = math::min(_end - _start, buf_max_len);
 
 		memcpy(buf, &_ringbuffer[_start], to_copy_len);
 		_start += to_copy_len;
