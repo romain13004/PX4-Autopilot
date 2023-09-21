@@ -1203,25 +1203,24 @@ void MissionBase::checkClimbRequired(int32_t mission_item_index)
 	size_t num_found_items{0U};
 	getNextPositionItems(mission_item_index, &next_mission_item_index, num_found_items, 1U);
 
-	const dm_item_t dataman_id = static_cast<dm_item_t>(_mission.dataman_id);
+	if (num_found_items > 0U) {
 
-	mission_item_s mission;
+		const dm_item_t dataman_id = static_cast<dm_item_t>(_mission.dataman_id);
+		mission_item_s mission;
+		_mission_init_climb_altitude_amsl = NAN; // default to NAN, overwrite below if applicable
 
-	const bool success = _dataman_cache.loadWait(dataman_id, next_mission_item_index, reinterpret_cast<uint8_t *>(&mission),
-			     sizeof(mission_item_s), MAX_DATAMAN_LOAD_WAIT);
+		const bool success = _dataman_cache.loadWait(dataman_id, next_mission_item_index, reinterpret_cast<uint8_t *>(&mission),
+				     sizeof(mission), MAX_DATAMAN_LOAD_WAIT);
 
-	if (num_found_items > 0 && success) {
-		const float altitude_amsl_next_position_item = MissionBlock::get_absolute_altitude_for_item(mission);
-		const float error_below_setpoint = altitude_amsl_next_position_item -
-						   _navigator->get_global_position()->alt;
+		if (success) {
+			const float altitude_amsl_next_position_item = MissionBlock::get_absolute_altitude_for_item(mission);
+			const float error_below_setpoint = altitude_amsl_next_position_item -
+							   _navigator->get_global_position()->alt;
 
-		if (error_below_setpoint > _navigator->get_altitude_acceptance_radius()) {
+			if (error_below_setpoint > _navigator->get_altitude_acceptance_radius()) {
 
-			_mission_init_climb_altitude_amsl = altitude_amsl_next_position_item;
-
-		} else {
-
-			_mission_init_climb_altitude_amsl = NAN;
+				_mission_init_climb_altitude_amsl = altitude_amsl_next_position_item;
+			}
 		}
 	}
 }
