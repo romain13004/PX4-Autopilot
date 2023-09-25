@@ -107,9 +107,9 @@ protected:
 	void getPreviousPositionItems(int32_t start_index, int32_t items_index[], size_t &num_found_items,
 				      uint8_t max_num_items);
 	/**
-	 * @brief Get the Next Mission Position Items
+	 * @brief Get the next mission item containing a position setpoint
 	 *
-	 * @param[in] start_index is the index from where to start searching the next mission position items
+	 * @param[in] start_index is the index from where to start searching (first possible return index)
 	 * @param[out] items_index is an array of indexes indicating the next mission position items found
 	 * @param[out] num_found_items are the amount of next position items found
 	 * @param[in] max_num_items are the maximum amount of next position items to be searched

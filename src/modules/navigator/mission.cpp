@@ -189,7 +189,7 @@ void Mission::setActiveMissionItems()
 	int32_t next_mission_items_index[max_num_next_items];
 	size_t num_found_items;
 
-	getNextPositionItems(_mission.current_seq, next_mission_items_index, num_found_items, max_num_next_items);
+	getNextPositionItems(_mission.current_seq + 1, next_mission_items_index, num_found_items, max_num_next_items);
 
 	mission_item_s next_mission_items[max_num_next_items];
 	const dm_item_t dataman_id = static_cast<dm_item_t>(_mission.dataman_id);

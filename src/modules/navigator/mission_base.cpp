@@ -270,7 +270,7 @@ MissionBase::on_active()
 		// add yaw alignment requirement on the current mission item
 		int32_t next_mission_item_index;
 		size_t num_found_items{0U};
-		getNextPositionItems(_mission.current_seq, &next_mission_item_index, num_found_items, 1U);
+		getNextPositionItems(_mission.current_seq + 1, &next_mission_item_index, num_found_items, 1U);
 
 		if (num_found_items == 1U && !PX4_ISFINITE(_mission_item.yaw)) {
 			mission_item_s next_position_mission_item;
@@ -907,12 +907,13 @@ void MissionBase::getNextPositionItems(int32_t start_index, int32_t items_index[
 		bool found_next_item{false};
 
 		do {
-			next_mission_index++;
 			found_next_item = getNonJumpItem(next_mission_index, next_mission_item, true, false, false) == PX4_OK;
+			next_mission_index++;
 		} while (!MissionBlock::item_contains_position(next_mission_item) && found_next_item);
 
 		if (found_next_item) {
-			items_index[item_idx] = next_mission_index;
+			items_index[item_idx] = math::max(next_mission_index - 1,
+							  static_cast<int32_t>(0)); // subtract 1 to get the index of the first position item
 			num_found_items = item_idx + 1;
 
 		} else {
@@ -958,7 +959,7 @@ int MissionBase::goToNextPositionItem(bool execute_jump)
 {
 	size_t num_found_items{0U};
 	int32_t next_position_item_index;
-	getNextPositionItems(_mission.current_seq, &next_position_item_index, num_found_items, 1);
+	getNextPositionItems(_mission.current_seq + 1, &next_position_item_index, num_found_items, 1);
 
 	if (num_found_items == 1U) {
 		setMissionIndex(next_position_item_index);

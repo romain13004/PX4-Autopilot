@@ -158,7 +158,7 @@ void RtlDirectMissionLand::setActiveMissionItems()
 
 		int32_t next_mission_item_index;
 		size_t num_found_items = 0;
-		getNextPositionItems(_mission.current_seq, &next_mission_item_index, num_found_items, 1u);
+		getNextPositionItems(_mission.current_seq + 1, &next_mission_item_index, num_found_items, 1u);
 
 		if (num_found_items > 0) {
 
