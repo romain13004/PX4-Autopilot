@@ -320,7 +320,13 @@ void Mission::handleTakeoff(WorkItemType &new_work_item_type, mission_item_s nex
 		events::send<float>(events::ID("mission_climb_before_start"), events::Log::Info,
 				    "Climb to {1:.1m_v} above home", _mission_init_climb_altitude_amsl - _navigator->get_home_position()->alt);
 
-		_mission_item.nav_cmd = NAV_CMD_TAKEOFF;
+		if (_land_detected_sub.get().landed) {
+			_mission_item.nav_cmd = NAV_CMD_TAKEOFF;
+
+		} else {
+			_mission_item.nav_cmd = NAV_CMD_LOITER_TO_ALT;
+		}
+
 		_mission_item.lat = _global_pos_sub.get().lat;
 		_mission_item.lon = _global_pos_sub.get().lon;
 		/* hold heading for takeoff items */
