@@ -230,12 +230,6 @@ void Mission::setActiveMissionItems()
 			mission_item_to_position_setpoint(_mission_item, &pos_sp_triplet->current);
 		}
 
-		// Only set the previous position item if the current one really changed
-		if ((_work_item_type != WorkItemType::WORK_ITEM_TYPE_MOVE_TO_LAND) &&
-		    !position_setpoint_equal(&pos_sp_triplet->current, &current_setpoint_copy)) {
-			pos_sp_triplet->previous = current_setpoint_copy;
-		}
-
 		// Allow a rotary wing vehicle to decelerate before reaching a wp with a hold time or a timeout
 		// This is done by setting the position triplet's next position's valid flag to false,
 		// which makes the FlightTask disregard the next position
@@ -281,6 +275,12 @@ void Mission::setActiveMissionItems()
 
 	} else {
 		handleVtolTransition(new_work_item_type, next_mission_items, num_found_items);
+	}
+
+	// Only set the previous position item if the current one really changed
+	if ((_work_item_type != WorkItemType::WORK_ITEM_TYPE_MOVE_TO_LAND) &&
+	    !position_setpoint_equal(&pos_sp_triplet->current, &current_setpoint_copy)) {
+		pos_sp_triplet->previous = current_setpoint_copy;
 	}
 
 	issue_command(_mission_item);
