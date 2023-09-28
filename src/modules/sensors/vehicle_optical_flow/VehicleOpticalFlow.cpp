@@ -320,10 +320,12 @@ void VehicleOpticalFlow::Run()
 				// gyro_rate
 				flow_vel.gyro_rate[0] = measured_body_rate(0);
 				flow_vel.gyro_rate[1] = measured_body_rate(1);
+				flow_vel.gyro_rate[2] = measured_body_rate(2);
 
 				// gyro_rate_integral
 				flow_vel.gyro_rate_integral[0] = gyro_xyz(0);
 				flow_vel.gyro_rate_integral[1] = gyro_xyz(1);
+				flow_vel.gyro_rate_integral[2] = gyro_xyz(2);
 
 				flow_vel.timestamp = hrt_absolute_time();
 
