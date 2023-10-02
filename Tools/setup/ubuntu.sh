@@ -220,7 +220,7 @@ if [[ $INSTALL_SIM == "true" ]]; then
 	sudo update-alternatives --set java $(update-alternatives --list java | grep "java-$java_version")
 
 	# Gazebo / Gazebo classic installation
-	if [[ "${UBUNTU_RELEASE}" == "22.04" ]]; then
+	if [[ "${UBUNTU_RELEASE}" == "20.04" ]]; then
 		echo "Gazebo (Garden) will be installed"
 		echo "Earlier versions will be removed"
 		# Add Gazebo binary repository

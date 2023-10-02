@@ -160,6 +160,7 @@ set(msg_files
 	RateCtrlStatus.msg
 	RcChannels.msg
 	RcParameterMap.msg
+	RomainMOne.msg
 	Rpm.msg
 	RtlTimeEstimate.msg
 	SatelliteInfo.msg

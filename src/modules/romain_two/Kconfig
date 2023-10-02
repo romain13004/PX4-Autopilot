@@ -1,0 +1,5 @@
+menuconfig MODULES_ROMAIN_TWO
+	bool "romain_two"
+	default y
+	---help---
+		Enable support for romain_two

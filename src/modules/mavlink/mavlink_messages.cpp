@@ -120,6 +120,7 @@
 #include "streams/VFR_HUD.hpp"
 #include "streams/VIBRATION.hpp"
 #include "streams/WIND_COV.hpp"
+//#include "streams/ROMAIN_M_ONE.hpp"
 
 #if !defined(CONSTRAINED_FLASH)
 # include "streams/ADSB_VEHICLE.hpp"
@@ -240,7 +241,7 @@ static const StreamListItem streams_list[] = {
 #if defined(HEARTBEAT_HPP)
 	create_stream_list_item<MavlinkStreamHeartbeat>(),
 #endif // HEARTBEAT_HPP
-#if defined(STATUSTEXT_HPP)
+#if defined(STATUSTEXT_HPP)UAVIONIX_ADSB_OUT_DYNAMIC_HPP
 	create_stream_list_item<MavlinkStreamStatustext>(),
 #endif // STATUSTEXT_HPP
 #if defined(COMMAND_LONG_HPP)
@@ -264,7 +265,7 @@ static const StreamListItem streams_list[] = {
 #endif // SCALED_IMU2_HPP
 #if defined(SCALED_IMU3_HPP)
 	create_stream_list_item<MavlinkStreamScaledIMU3>(),
-#endif // SCALED_IMU3_HPP
+#endif // SCALED_IMU3_HPPUAVIONIX_ADSB_OUT_DYNAMIC_HPP
 #if defined(SCALED_PRESSURE_HPP)
 	create_stream_list_item<MavlinkStreamScaledPressure>(),
 #endif // SCALED_PRESSURE
@@ -488,6 +489,9 @@ static const StreamListItem streams_list[] = {
 #if defined(UAVIONIX_ADSB_OUT_DYNAMIC_HPP)
 	create_stream_list_item<MavlinkStreamUavionixADSBOutDynamic>()
 #endif // UAVIONIX_ADSB_OUT_DYNAMIC_HPP
+/*#if defined(ROMAIN_M_ONE_HPP)
+	create_stream_list_item<RomainMOne>()
+#endif // ROMAIN_M_ONE_HPP */
 };
 
 const char *get_stream_name(const uint16_t msg_id)

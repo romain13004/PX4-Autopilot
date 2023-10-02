@@ -31,37 +31,48 @@
  *
  ****************************************************************************/
 
-#include "WorkItemExample.hpp"
+#include "RomainTwo.hpp"
+#include <uORB/Publication.hpp>
+#include <uORB/Subscription.hpp>
+#include <uORB/topics/romain_m_one.h>
 
-WorkItemExample::WorkItemExample() :
+
+RomainTwo::RomainTwo() :
 	ModuleParams(nullptr),
 	ScheduledWorkItem(MODULE_NAME, px4::wq_configurations::test1)
 {
 }
 
-WorkItemExample::~WorkItemExample()
+RomainTwo::~RomainTwo()
 {
 	perf_free(_loop_perf);
 	perf_free(_loop_interval_perf);
 }
 
-bool WorkItemExample::init()
+bool RomainTwo::init()
 {
+
+	PX4_WARN("Romain Two is running ! (via RomainTwo::init()) ");
+
 	// execute Run() on every sensor_accel publication
 	if (!_sensor_accel_sub.registerCallback()) {
 		PX4_ERR("callback registration failed");
 		return false;
 	}
-	
-	PX4_INFO("WorkItemExample is running");
+
+
 	// alternatively, Run on fixed interval
 	// ScheduleOnInterval(5000_us); // 2000 us interval, 200 Hz rate
+	Scheduled();
 
 	return true;
 }
 
-void WorkItemExample::Run()
+void RomainTwo::Run()
 {
+
+	//PX4_WARN("Romain Two is running ! (via RomainTwo::Run()) ");
+
 	if (should_exit()) {
 		ScheduleClear();
 		exit_and_cleanup();
@@ -79,7 +90,37 @@ void WorkItemExample::Run()
 		updateParams(); // update module parameters (in DEFINE_PARAMETERS)
 	}
 
+/*
+	// My own exemple
 
+	// suscribing to wind topic
+	 int wind_sub = orb_subscribe(ORB_ID(wind));
+	//creating publisher for RomainMOne
+	orb_advert_t romain_m_one_pub = orb_advertise(ORB_ID(romain_m_one), ORB_ID::romain_m_one);
+
+while (!should_exit()) {
+            // Declare a wind message variable
+            struct wind_s wind_data;
+            bool updated = false;
+
+            // Wait for new wind data
+            orb_check(wind_sub, &updated);
+
+            if (updated) {
+                // Copy the wind data
+                orb_copy(ORB_ID(wind), wind_sub, &wind_data);_romain_m_one_pub
+                px4_msgs::msg::RomainMOne romain_m_one_data;
+                romain_m_one_data.some_field = wind_data.some_field;  // Customize this based on your message structure
+
+                // Publish your custom message
+                orb_publish(ORB_ID(romain_m_one), romain_m_one_pub, &romain_m_one_data);
+            }
+V
+            usleep(10000); // Sleep for a while, adjust as needed
+        }
+
+        orb_unsubscribe(wind_sub);
+*/
 	// Example
 	//  update vehicle_status to check arming state
 	if (_vehicle_status_sub.updated()) {
@@ -109,6 +150,14 @@ void WorkItemExample::Run()
 		if (_sensor_accel_sub.copy(&accel)) {
 			// DO WORK
 
+			/* obtained data for the first file descriptor */
+
+			romain_m_one_s r_data{};
+			r_data.r1= (double) accel.x;
+			r_data.timestamp = hrt_absolute_time();
+			_romain_m_one_pub.publish(r_data);
+
+
 			// access parameter value (SYS_AUTOSTART)
 			if (_param_sys_autostart.get() == 1234) {
 				// do something if SYS_AUTOSTART is 1234
@@ -125,12 +174,13 @@ void WorkItemExample::Run()
 	_orb_test_pub.publish(data);
 
 
+
 	perf_end(_loop_perf);
 }
 
-int WorkItemExample::task_spawn(int argc, char *argv[])
+int RomainTwo::task_spawn(int argc, char *argv[])
 {
-	WorkItemExample *instance = new WorkItemExample();
+	RomainTwo *instance = new RomainTwo();
 
 	if (instance) {
 		_object.store(instance);
@@ -151,19 +201,19 @@ int WorkItemExample::task_spawn(int argc, char *argv[])
 	return PX4_ERROR;
 }
 
-int WorkItemExample::print_status()
+int RomainTwo::print_status()
 {
 	perf_print_counter(_loop_perf);
 	perf_print_counter(_loop_interval_perf);
 	return 0;
 }
 
-int WorkItemExample::custom_command(int argc, char *argv[])
+int RomainTwo::custom_command(int argc, char *argv[])
 {
 	return print_usage("unknown command");
 }
 
-int WorkItemExample::print_usage(const char *reason)
+int RomainTwo::print_usage(const char *reason)
 {
 	if (reason) {
 		PX4_WARN("%s\n", reason);
@@ -176,14 +226,14 @@ Example of a simple module running out of a work queue.
 
 )DESCR_STR");
 
-	PRINT_MODULE_USAGE_NAME("work_item_example", "template");
+	PRINT_MODULE_USAGE_NAME("work_item_example", "Romain Two");
 	PRINT_MODULE_USAGE_COMMAND("start");
 	PRINT_MODULE_USAGE_DEFAULT_COMMANDS();
 
 	return 0;
 }
 
-extern "C" __EXPORT int work_item_example_main(int argc, char *argv[])
+extern "C" __EXPORT int romain_two_main(int argc, char *argv[])
 {
-	return WorkItemExample::main(argc, argv);
+	return RomainTwo::main(argc, argv);
 }

@@ -44,6 +44,9 @@ publications:
   - topic: /fmu/out/vehicle_status
     type: px4_msgs::msg::VehicleStatus
 
+  - topic: /fmu/out/romain_m_one
+    type: px4_msgs::msg::RomainMOne
+
   - topic: /fmu/out/vehicle_trajectory_waypoint_desired
     type: px4_msgs::msg::VehicleTrajectoryWaypoint
 
@@ -67,6 +70,7 @@ subscriptions:
   - topic: /fmu/in/trajectory_setpoint
     type: px4_msgs::msg::TrajectorySetpoint
 
+
   - topic: /fmu/in/vehicle_attitude_setpoint
     type: px4_msgs::msg::VehicleAttitudeSetpoint
 
@@ -87,3 +91,4 @@ subscriptions:
 
   - topic: /fmu/in/vehicle_trajectory_waypoint
     type: px4_msgs::msg::VehicleTrajectoryWaypoint
+

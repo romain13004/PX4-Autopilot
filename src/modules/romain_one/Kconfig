@@ -1,0 +1,5 @@
+menuconfig MODULES_ROMAIN_ONE
+	bool "romain_one"
+	default y
+	---help---
+		Enable support for romain_one
