@@ -60,7 +60,6 @@ bool RomainTwo::init()
 		return false;
 	}
 
-
 	// alternatively, Run on fixed interval
 	// ScheduleOnInterval(5000_us); // 2000 us interval, 200 Hz rate
 	Scheduled();
@@ -70,8 +69,6 @@ bool RomainTwo::init()
 
 void RomainTwo::Run()
 {
-
-	//PX4_WARN("Romain Two is running ! (via RomainTwo::Run()) ");
 
 	if (should_exit()) {
 		ScheduleClear();
@@ -90,38 +87,6 @@ void RomainTwo::Run()
 		updateParams(); // update module parameters (in DEFINE_PARAMETERS)
 	}
 
-/*
-	// My own exemple
-
-	// suscribing to wind topic
-	 int wind_sub = orb_subscribe(ORB_ID(wind));
-	//creating publisher for RomainMOne
-	orb_advert_t romain_m_one_pub = orb_advertise(ORB_ID(romain_m_one), ORB_ID::romain_m_one);
-
-while (!should_exit()) {
-            // Declare a wind message variable
-            struct wind_s wind_data;
-            bool updated = false;
-
-            // Wait for new wind data
-            orb_check(wind_sub, &updated);
-
-            if (updated) {
-                // Copy the wind data
-                orb_copy(ORB_ID(wind), wind_sub, &wind_data);_romain_m_one_pub
-                px4_msgs::msg::RomainMOne romain_m_one_data;
-                romain_m_one_data.some_field = wind_data.some_field;  // Customize this based on your message structure
-
-                // Publish your custom message
-                orb_publish(ORB_ID(romain_m_one), romain_m_one_pub, &romain_m_one_data);
-            }
-V
-            usleep(10000); // Sleep for a while, adjust as needed
-        }
-
-        orb_unsubscribe(wind_sub);
-*/
-	// Example
 	//  update vehicle_status to check arming state
 	if (_vehicle_status_sub.updated()) {
 		vehicle_status_s vehicle_status;
@@ -141,22 +106,24 @@ V
 		}
 	}
 
-// huheuheuehue
-	// Example
-	//  grab latest accelerometer data
+	// Example 1
+	// Publishing some data on an existing topic : 'orb_test'
+	orb_test_s data{};
+	data.val = 314159;
+	data.timestamp = hrt_absolute_time();
+	_orb_test_pub.publish(data);
+
+	// Example 2
+	// Grabing latest accelerometer data for x and republishing on a brand new topic : 'romain_m_one'
 	if (_sensor_accel_sub.updated()) {
 		sensor_accel_s accel;
 
 		if (_sensor_accel_sub.copy(&accel)) {
-			// DO WORK
-
-			/* obtained data for the first file descriptor */
 
 			romain_m_one_s r_data{};
 			r_data.r1= (double) accel.x;
 			r_data.timestamp = hrt_absolute_time();
 			_romain_m_one_pub.publish(r_data);
-
 
 			// access parameter value (SYS_AUTOSTART)
 			if (_param_sys_autostart.get() == 1234) {
@@ -165,14 +132,29 @@ V
 		}
 	}
 
+	// Exemple 3
+	// Creating a subscriber using QOS
+/*
+	struct orb_qos_t qos;
+	memset(&qos, 0, sizeof(qos));
+	qos.priority = ORB_PRIO_DEFAULT;
+	qos.relax = false;
+	sensor_gyro_sub.set_interval(20);  // minimum interval between updates (in ms)
+	sensor_gyro_sub.set_required_qos(qos);
 
-	// Example
-	//  publish some data
-	orb_test_s data{};
-	data.val = 314159;
-	data.timestamp = hrt_absolute_time();
-	_orb_test_pub.publish(data);
+    	sensor_gyro_s dataG;
+    	bool updated;
+    	sensor_gyro_sub.update(&updated);
 
+    	if (updated) {
+        	sensor_gyro_sub.copy(&dataG);
+		gyroX = (double) dataG.x
+
+        	// to do here : add something to do with the data
+		// Option 1 : Merge example 1 & 3 i.e. republishing on 'orb_test'
+		// Option 2 : idk
+    	}
+	*/
 
 
 	perf_end(_loop_perf);
