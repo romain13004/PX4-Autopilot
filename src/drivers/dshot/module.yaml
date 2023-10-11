@@ -33,7 +33,7 @@ parameters:
                     When mixer outputs 1000 or value inside DSHOT 3D deadband, DShot 0 is sent.
             type: boolean
             default: 0
-            DSHOT_BIDIR_EN:
+        DSHOT_BIDIR_EN:
             description:
                 short: Enable bidirectional DShot
                 long: |

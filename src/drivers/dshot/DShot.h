@@ -145,7 +145,7 @@ private:
 
 	static void erpm_trampoline(int32_t erpms[], size_t num_erpms, void *context);
 	void erpm(int32_t erpms[], size_t num_erpms);
-	
+
 	MixingOutput _mixing_output{PARAM_PREFIX, DIRECT_PWM_OUTPUT_CHANNELS, *this, MixingOutput::SchedulingPolicy::Auto, false, false};
 	uint32_t _reversible_outputs{};
 
@@ -175,7 +175,7 @@ private:
 
 	uORB::PublicationData<esc_status_s> _esc_status_pub{ORB_ID(esc_status)};
 	uint16_t _esc_status_counter{0};
-	
+
 	DEFINE_PARAMETERS(
 		(ParamFloat<px4::params::DSHOT_MIN>)    _param_dshot_min,
 		(ParamBool<px4::params::DSHOT_3D_ENABLE>) _param_dshot_3d_enable,
